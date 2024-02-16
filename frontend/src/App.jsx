@@ -1,10 +1,15 @@
 import "./App.css";
+import Home from "./pages/Home/Home";
+import Login from "./pages/Login/Login";
+import Signup from "./pages/Signup/Signup";
 
 function App() {
   return (
-    <>
-      <h1 className=" text-xs text-blue-400 text-center">Hello Chat App</h1>
-    </>
+    <div className="p-4 h-screen flex items-center justify-center ">
+      {/* <Login/> */}
+      {/* <Signup/> */}
+      <Home/>
+    </div>
   );
 }
 
