@@ -59,11 +59,13 @@
 import User from '../model/userModel.js';
 import bcrypt from 'bcryptjs';
 import generateTokenAndSetCookie from '../utils/generateToken.js';
+import  jwt  from 'jsonwebtoken';
 
 // Controller function for user signup
 export const signup = async (req, res) => {
     try {
         // Destructure required fields from request body
+
         const { fullname, username, password, gender, confirmpassword } = req.body;
 
         // Check if passwords match
@@ -98,17 +100,21 @@ export const signup = async (req, res) => {
             gender,
             profilepic
         });
-
+ 
+         
         // Save new user to database
         await newUser.save();
 
         // Generate JWT token and set as cookie
         generateTokenAndSetCookie(newUser._id, res);
-
+       // Generate JWT token for response
+       const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET_KEY, { expiresIn: '50d' });
         // Send success response
         res.status(201).json({
             message: "User created successfully",
-            newUser
+            newUser,
+            token
+
         });
     } catch (error) {
         console.error("Error in signup controller:", error);
@@ -125,8 +131,7 @@ export const signup = async (req, res) => {
 export const login = async (req, res) => {
     try {
         // Destructure username and password from request body
-        const { username, password } = req.body;
-
+        let { username, password } = req.body;
         // Check if username exists
         const user = await User.findOne({ username });
         if (!user) {
@@ -145,11 +150,14 @@ export const login = async (req, res) => {
 
         // Generate JWT token and set as cookie
         generateTokenAndSetCookie(user._id, res);
+ // Generate JWT token for response (using the correct user id)
+ const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY, { expiresIn: '50d' });
 
         // Send success response
         res.status(200).json({
             message: "Login successful",
-            user
+            user,
+            token
         });
     } catch (error) {
         console.error("Error in login controller:", error);
@@ -166,9 +174,14 @@ export const logout = (req, res) => {
     try {
         // Clear the JWT token cookie
         // res.clearCookie("token");
-        res.cookie("jwt","",{maxAge:0})
+        // res.cookie("jwt","",{maxAge:0})
 
-        // Send success response
+        // // Send success response
+        // res.status(200).json({
+        //     message: "Logout successful"
+        // });
+        // Clear the JWT token cookie by setting its expiry date in the past
+        res.cookie('jwt', '', { expires: new Date(0), httpOnly: true });
         res.status(200).json({
             message: "Logout successful"
         });

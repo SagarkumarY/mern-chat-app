@@ -32,11 +32,14 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
+
 
 // Import routes
 import messageRouter from './routes/messageRouter.js';
 import authRouter from './routes/authRouter.js';
 import usersRouter from './routes/usersRouter.js';
+
 
 // Import database connection
 import connectDB from './db/db.js';
@@ -51,6 +54,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
+app.use(cors());
 app.use(express.json()); // Parse incoming JSON data
 app.use(cookieParser()); // Parse cookies
 
