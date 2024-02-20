@@ -48,7 +48,7 @@ import connectDB from './db/db.js';
 dotenv.config();
 
 // Initialize express app
-const app = express();
+import { app,server } from './socket/socket.js';
 
 // Set port from environment variable or default to 5000
 const PORT = process.env.PORT || 5000;
@@ -73,7 +73,7 @@ app.use('/api/message', messageRouter);
 app.use('/api/users', usersRouter);
 
 // Start the server
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     // Connect to the database
     connectDB();
     // Log server listening message

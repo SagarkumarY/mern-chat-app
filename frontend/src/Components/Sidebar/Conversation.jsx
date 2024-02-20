@@ -1,9 +1,13 @@
 import React from "react";
 import useConversation from "../../zustand/useConversation";
+import { useSocketContext } from "../../context/SocketContect";
 function Conversation({ conversation, lastIdx, emoji }) {
   const { seletedConversation, setSeletedConversation } = useConversation();
 
   const isSelected = seletedConversation?._id === conversation._id;
+  const {onlineUsers} = useSocketContext();
+
+  const  isOnline = onlineUsers.includes(conversation._id);
 
   return (
     <>
@@ -13,7 +17,7 @@ function Conversation({ conversation, lastIdx, emoji }) {
       `}
         onClick={()=>setSeletedConversation(conversation)}
       >
-        <div className="avatar online ">
+        <div className={`avatar ${isOnline ? "online" :"offline"}`}>
           <div className="w-12 rounded-full">
             <img
               // src="https://cdn2.iconfinder.com/data/icons/emoji-line/32/emoji_20-512.png"

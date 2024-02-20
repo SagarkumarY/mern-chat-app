@@ -37,6 +37,7 @@
 
 import Conversation from '../model/conversationModel.js';
 import Message from '../model/messageModel.js';
+import { getReceiverSocketId ,io} from '../socket/socket.js';
 
 
 // Send a Message to a conversation using Post request method
@@ -69,7 +70,7 @@ export const sendMessage = async (req, res) => {
         // Save the new message
         // await newMessage.save();
 
-        // Socket.io functionality goes here 
+
 
         // Push the ID of the new message to the conversation's messages array
         conversation.messages.push(newMessage._id);
@@ -78,6 +79,14 @@ export const sendMessage = async (req, res) => {
         // await conversation.save();
 
         await Promise.all([conversation.save(), newMessage.save()])
+
+        // Socket.io functionality goes here 
+
+        const receiverSocketId = getReceiverSocketId(receiverId);
+
+        if (receiverSocketId) {
+            io.to(receiverSocketId).emit("newMessage", newMessage)
+        }
 
         // Respond with the new message
         res.status(201).json(newMessage);

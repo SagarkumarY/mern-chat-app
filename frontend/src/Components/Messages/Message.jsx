@@ -13,8 +13,9 @@ function Message({ message }) {
 
   // Access user authentication information from context
   const { authuser } = useAuthContext();
+
   // Access selected conversation information from state
-  const { selectedConversation } = useConversation();
+  const { seletedConversation } = useConversation();
 
   // Determine if the message is from the current user
   const fromMe = message.senderId === authuser._id;
@@ -25,10 +26,13 @@ function Message({ message }) {
   // Set profile picture based on message sender
   const profilePic = fromMe
     ? authuser.profilepic
-    : selectedConversation?.profilepic;
-
+    :  seletedConversation?.profilepic;
+   
+   
   // Set background color for message bubble based on message sender
   const bubblebgColor = fromMe ? "bg-blue-500" : "";
+
+  const shakeClass = message.shouldShake ? "shake" : "";
 
   return (
     <div className={`chat ${chatClassName}`}>
@@ -39,7 +43,7 @@ function Message({ message }) {
         </div>
       </div>
       {/* Display message bubble */}
-      <div className={`chat-bubble text-white ${bubblebgColor}`}>
+      <div className={`chat-bubble text-white ${bubblebgColor} ${shakeClass} `}>
         {message.message}
       </div>
       {/* Display message time */}
