@@ -12,7 +12,8 @@ const server = http.createServer(app);
 const io = new Server(server, {
     // Configure CORS for Socket.IO server
     cors: {
-        origin: ["http://localhost:5173"], // Allow requests from this origin
+        // origin: ["http://localhost:5173"], // Allow requests from this origin
+        origin:["https://chat-app-s-9ekl.onrender.com"],
         methods: ['GET', 'POST'] // Allow only specified HTTP methods
     }
 });
